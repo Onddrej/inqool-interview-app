@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createUser } from '../api/users';
-import { useState } from 'react';
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -16,7 +15,6 @@ type UserFormValues = z.infer<typeof userSchema>;
 
 export function UserForm({ onCancel, onSuccess }: { onCancel?: () => void; onSuccess?: (success?: boolean) => void }) {
   const queryClient = useQueryClient();
-  const [success, setSuccess] = useState(false);
   const {
     register,
     handleSubmit,
@@ -32,7 +30,6 @@ export function UserForm({ onCancel, onSuccess }: { onCancel?: () => void; onSuc
     mutationFn: createUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      setSuccess(true);
       reset();
       if (onSuccess) onSuccess(true);
     },

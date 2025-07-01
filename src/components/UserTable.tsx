@@ -12,7 +12,6 @@ import {
   Badge,
   Button,
   Skeleton,
-  Card,
   Modal,
 } from '@mantine/core';
 import classes from './TableSort.module.css';
