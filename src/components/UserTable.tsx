@@ -11,6 +11,7 @@ import {
   UnstyledButton,
   Badge,
   Button,
+  Skeleton,
 } from '@mantine/core';
 import classes from './TableSort.module.css';
 import { useQuery } from '@tanstack/react-query'
@@ -116,7 +117,30 @@ export function UserTable() {
   ));
 
 
-  if (isLoading) return <div>Načítavam používateľov...</div>
+  if (isLoading) return (
+    <ScrollArea>
+      <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
+        <Table.Tbody>
+          <Table.Tr>
+            <Table.Th>ID</Table.Th>
+            <Table.Th>Name</Table.Th>
+            <Table.Th>Gender</Table.Th>
+            <Table.Th>Banned</Table.Th>
+          </Table.Tr>
+        </Table.Tbody>
+        <Table.Tbody>
+          {[...Array(5)].map((_, i) => (
+            <Table.Tr key={i}>
+              <Table.Td><Skeleton height={16} width={30} radius="xl" /></Table.Td>
+              <Table.Td><Skeleton height={16} width="80%" radius="xl" /></Table.Td>
+              <Table.Td><Skeleton height={16} width={60} radius="xl" /></Table.Td>
+              <Table.Td><Skeleton height={24} width={60} radius="xl" /></Table.Td>
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </Table>
+    </ScrollArea>
+  );
   if (error) return <div>Chyba pri načítaní dát</div>
 
   return (
