@@ -3,6 +3,8 @@ import { Button, Flex, Title } from "@mantine/core";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import UsersPage from "./pages/UserPage";
 import AnimalsPage from "./pages/AnimalPage";
+import { IconUser, IconPaw } from "@tabler/icons-react";
+import { USER_COLOR, ANIMAL_COLOR } from "./style/colors";
 
 type RippleState = {
   x: number;
@@ -28,26 +30,51 @@ function Home() {
   };
 
   return (
-    <Flex direction="column" align="center" justify="center" h="100vh" style={{ position: "relative", overflow: "hidden" }}>
+    <Flex
+      direction="column"
+      align="center"
+      justify="center"
+      h="100vh"
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        backgroundImage: 'url("/bg.jpg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {(!ripple) && (
         <>
-          <Title order={1}>Do you want to interact with ...</Title>
+          <Title order={1}>
+            I want to{" "}
+            <span style={{ color: USER_COLOR, textDecoration: "bold" }}>
+              interact with...
+            </span>
+          </Title>
           <Flex mih={100} gap="sm" justify="center" align="center" direction="row" wrap="wrap">
             <Button
               variant="filled"
               size="xl"
               radius="md"
-              onClick={handleClick("/users", "#228be6")}
+              onClick={handleClick("/users", USER_COLOR)}
             >
-              Users
+              <Flex direction="column" align="center" gap={2}>
+                <IconUser size={28} />
+                <span>Users</span>
+              </Flex>
             </Button>
             <Button
               variant="filled"
               size="xl"
               radius="md"
-              onClick={handleClick("/animals", "#fa5252")}
+              style={{ backgroundColor: ANIMAL_COLOR }}
+              onClick={handleClick("/animals", ANIMAL_COLOR)}
             >
-              Animals
+              <Flex direction="column" align="center" gap={2}>
+                <IconPaw size={28} />
+                <span>Animals</span>
+              </Flex>
             </Button>
           </Flex>
         </>
