@@ -10,6 +10,7 @@ import {
   TextInput,
   UnstyledButton,
   Badge,
+  Button,
 } from '@mantine/core';
 import classes from './TableSort.module.css';
 import { useQuery } from '@tanstack/react-query'
@@ -126,13 +127,25 @@ export function UserTable() {
 
   return (
     <ScrollArea>
-      <TextInput
-        placeholder="Search by any field"
-        mb="md"
-        leftSection={<IconSearch size={16} stroke={1.5} />}
-        value={search}
-        onChange={handleSearchChange}
-      />
+      <Group mb="md">
+        <TextInput
+          placeholder="Search by any field"
+          leftSection={<IconSearch size={16} stroke={1.5} />}
+          value={search}
+          onChange={handleSearchChange}
+        />
+        <Button
+          variant="outline"
+          onClick={() => {
+            setSearch('');
+            setSortBy(null);
+            setReverseSortDirection(false);
+            setSortedData(data ?? []);
+          }}
+        >
+          Clear all filters
+        </Button>
+      </Group>
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
         <Table.Tbody>
           <Table.Tr>
