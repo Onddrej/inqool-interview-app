@@ -26,3 +26,8 @@ export const banUser = async (id: string) => {
   const res = await axios.patch(`https://inqool-interview-api.vercel.app/api/users/${id}`, { banned: true });
   return res.data;
 }
+
+export const unbanUser = async (id: string) => {
+  const res = await axios.patch(`https://inqool-interview-api.vercel.app/api/users/${id}`, { banned: false });
+  return res.data;
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IconChevronDown, IconChevronUp, IconSearch, IconSelector, IconEdit, IconBan } from '@tabler/icons-react';
+import { IconChevronDown, IconChevronUp, IconSearch, IconSelector, IconEdit, IconBan, IconCheck } from '@tabler/icons-react';
 import {
   Center,
   Group,
@@ -16,7 +16,7 @@ import {
 } from '@mantine/core';
 import classes from './TableSort.module.css';
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { fetchUsers, banUser } from '../api/users';
+import { fetchUsers, banUser, unbanUser } from '../api/users';
 import type { RowData } from '../api/users';
 import { UserForm } from './UserForm';
 
@@ -111,10 +111,14 @@ export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
     setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
-  const handleBan = async (userId: string) => {
+  const handleBanToggle = async (userId: string, banned: boolean) => {
     setBanLoadingId(userId);
     try {
-      await banUser(userId);
+      if (banned) {
+        await unbanUser(userId);
+      } else {
+        await banUser(userId);
+      }
       await queryClient.invalidateQueries({ queryKey: ['users'] });
     } finally {
       setBanLoadingId(null);
@@ -134,8 +138,15 @@ export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
           <Button size="xs" variant="subtle" leftSection={<IconEdit size={16} />} onClick={() => setEditUser(row)}>
             Edit
           </Button>
-          <Button size="xs" variant="subtle" color="red" leftSection={<IconBan size={16} />} onClick={() => handleBan(row.id)} loading={banLoadingId === row.id} disabled={row.banned}>
-            Ban
+          <Button
+            size="xs"
+            variant="subtle"
+            color={row.banned ? 'green' : 'red'}
+            leftSection={row.banned ? <IconCheck size={16} /> : <IconBan size={16} />}
+            onClick={() => handleBanToggle(row.id, row.banned)}
+            loading={banLoadingId === row.id}
+          >
+            {row.banned ? 'Unban' : 'Ban'}
           </Button>
         </Group>
       </Table.Td>
