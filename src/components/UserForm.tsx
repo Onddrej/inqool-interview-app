@@ -9,7 +9,7 @@ import { createUser, updateUser } from '../api/users';
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   gender: z.enum(['female', 'male', 'other']),
-  banned: z.literal(false),
+  banned: z.boolean(),
 });
 
 type UserFormValues = z.infer<typeof userSchema>;
@@ -25,12 +25,12 @@ export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void;
     control,
   } = useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
-    defaultValues: user ? { name: user.name, gender: user.gender, banned: false } : { gender: 'male', banned: false },
+    defaultValues: user ? { name: user.name, gender: user.gender, banned: user.banned } : { gender: 'male', banned: false },
   });
 
   const mutation = useMutation({
     mutationFn: (data: UserFormValues) =>
-      isEdit && user ? updateUser(user.id, { ...data, banned: user.banned }) : createUser({ ...data, banned: false }),
+      isEdit && user ? updateUser(user.id, data) : createUser({ ...data, banned: false }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       reset();
@@ -80,7 +80,7 @@ export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void;
             Save
           </Button>
         </Flex>
-        {mutation.isError && <Text c="red" mt="sm">Error adding user</Text>}
+        {mutation.isError && <Text c="red" mt="sm">Error saving user</Text>}
       </form>
     </Card>
   );

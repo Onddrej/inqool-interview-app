@@ -18,7 +18,7 @@ export const createUser = async (user: Omit<RowData, 'id'>) => {
 }
 
 export const updateUser = async (id: string, user: Partial<Omit<RowData, 'id'>>) => {
-  const res = await axios.put(`https://inqool-interview-api.vercel.app/api/users/${id}`, user);
+  const res = await axios.patch(`https://inqool-interview-api.vercel.app/api/users/${id}`, user);
   return res.data;
 }
 
