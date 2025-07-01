@@ -5,6 +5,7 @@ import UsersPage from "./pages/UserPage";
 import AnimalsPage from "./pages/AnimalPage";
 import { IconUser, IconPaw } from "@tabler/icons-react";
 import { USER_COLOR, ANIMAL_COLOR } from "./style/colors";
+import { ActionToggle } from "./components/ActionToggle";
 
 type RippleState = {
   x: number;
@@ -44,6 +45,9 @@ function Home() {
         backgroundRepeat: "no-repeat",
       }}
     >
+      <div style={{ position: 'absolute', top: 16, right: 16, zIndex: 1000 }}>
+        <ActionToggle />
+      </div>
       {(!ripple) && (
         <>
           <Title order={1}>
