@@ -1,11 +1,10 @@
-import { Card, TextInput, Button, Select, Group, Text, Alert } from '@mantine/core';
+import { Card, TextInput, Button, Select, Text, Stack, Flex } from '@mantine/core';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createUser } from '../api/users';
 import { useState } from 'react';
-import { IconCheck } from '@tabler/icons-react';
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -15,7 +14,7 @@ const userSchema = z.object({
 
 type UserFormValues = z.infer<typeof userSchema>;
 
-export function UserForm() {
+export function UserForm({ onCancel, onSuccess }: { onCancel?: () => void; onSuccess?: (success?: boolean) => void }) {
   const queryClient = useQueryClient();
   const [success, setSuccess] = useState(false);
   const {
@@ -35,7 +34,7 @@ export function UserForm() {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setSuccess(true);
       reset();
-      setTimeout(() => setSuccess(false), 2000);
+      if (onSuccess) onSuccess(true);
     },
   });
 
@@ -44,9 +43,9 @@ export function UserForm() {
   };
 
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Group gap="md" align="flex-end">
+        <Stack>
           <TextInput
             label="Name"
             placeholder="Enter name"
@@ -72,25 +71,15 @@ export function UserForm() {
               />
             )}
           />
-          <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
-            Add User
+        </Stack>
+        <Flex mt="lg" justify="flex-end" gap="sm">
+          <Button variant="default" onClick={onCancel} type="button">
+            Cancel
           </Button>
-        </Group>
-        {success && (
-          <div style={{ position: 'fixed', right: 24, bottom: 24, zIndex: 9999, minWidth: 300 }}>
-            <Alert
-              variant="light"
-              color="green"
-              radius="lg"
-              title="User created"
-              icon={<IconCheck />}
-              withCloseButton
-              onClose={() => setSuccess(false)}
-            >
-              The user was successfully added.
-            </Alert>
-          </div>
-        )}
+          <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
+            Save
+          </Button>
+        </Flex>
         {mutation.isError && <Text c="red" mt="sm">Error adding user</Text>}
       </form>
     </Card>

@@ -12,11 +12,14 @@ import {
   Badge,
   Button,
   Skeleton,
+  Card,
+  Modal,
 } from '@mantine/core';
 import classes from './TableSort.module.css';
 import { useQuery } from '@tanstack/react-query'
 import { fetchUsers } from '../api/users';
 import type { RowData } from '../api/users';
+import { UserForm } from './UserForm';
 
 interface ThProps {
   children: React.ReactNode;
@@ -73,7 +76,7 @@ function sortData(
 }
 
 
-export function UserTable() {
+export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
     const { data, isLoading, error } = useQuery({
         queryKey: ['users'],
         queryFn: fetchUsers,
@@ -85,6 +88,7 @@ export function UserTable() {
   const [sortedData, setSortedData] = useState<RowData[]>([]);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const [addUserOpen, setAddUserOpen] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -163,7 +167,18 @@ export function UserTable() {
         >
           Clear all filters
         </Button>
+        <Button
+          onClick={() => setAddUserOpen(true)}
+        >
+          Add user
+        </Button>
       </Group>
+      <Modal opened={addUserOpen} onClose={() => setAddUserOpen(false)} title="Add User" centered>
+        <UserForm onCancel={() => setAddUserOpen(false)} onSuccess={() => {
+          setAddUserOpen(false);
+          if (onUserAdded) onUserAdded();
+        }} />
+      </Modal>
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
         <Table.Tbody>
           <Table.Tr>
