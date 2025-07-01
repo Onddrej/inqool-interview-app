@@ -1,11 +1,11 @@
-import { Button, Flex } from "@mantine/core";
+import { Button, Flex, Title } from "@mantine/core";
 
 function App() {
   return (
     <Flex direction="column" align="center" justify="center" h="100vh">
-      <h1>Do you want to interact with ...</h1>
+      <Title order={1}>Do you want to interact with ...</Title>
       <Flex
-        mih={50}
+        mih={100}
         gap="sm"
         justify="center"
         align="center"
