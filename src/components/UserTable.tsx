@@ -1,5 +1,10 @@
-import { useState, useEffect } from 'react';
-import { IconChevronDown, IconChevronUp, IconSearch, IconSelector } from '@tabler/icons-react';
+import { useState, useEffect } from "react";
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconSearch,
+  IconSelector,
+} from "@tabler/icons-react";
 import {
   Center,
   Group,
@@ -10,15 +15,10 @@ import {
   TextInput,
   UnstyledButton,
   Badge,
-} from '@mantine/core';
-import classes from './TableSort.module.css';
-import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
-
-const fetchUsers = async () => {
-    const res = await axios.get('https://inqool-interview-api.vercel.app/api/users')
-    return res.data
-  }
+} from "@mantine/core";
+import classes from "./TableSort.module.css";
+import { useQuery } from "@tanstack/react-query";
+import { fetchUsers } from "../api/users";
 
 interface RowData {
   id: string;
@@ -35,7 +35,11 @@ interface ThProps {
 }
 
 function Th({ children, reversed, sorted, onSort }: ThProps) {
-  const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+  const Icon = sorted
+    ? reversed
+      ? IconChevronUp
+      : IconChevronDown
+    : IconSelector;
   return (
     <Table.Th className={classes.th}>
       <UnstyledButton onClick={onSort} className={classes.control}>
@@ -55,7 +59,9 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
-    keys(data[1]).some((key) => item[key]?.toString().toLowerCase().includes(query))
+    keys(data[1]).some((key) =>
+      item[key]?.toString().toLowerCase().includes(query)
+    )
   );
 }
 
@@ -81,16 +87,13 @@ function sortData(
   );
 }
 
-
 export function UserTable() {
-    const { data, isLoading, error } = useQuery({
-        queryKey: ['users'],
-        queryFn: fetchUsers,
-      })
-    
-     
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
+  });
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState<RowData[]>([]);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
@@ -111,7 +114,9 @@ export function UserTable() {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setSearch(value);
-    setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
+    setSortedData(
+      sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
+    );
   };
 
   const rows = sortedData.map((row) => (
@@ -119,14 +124,17 @@ export function UserTable() {
       <Table.Td>{row.name}</Table.Td>
       <Table.Td>{row.gender}</Table.Td>
       <Table.Td>
-        {row.banned ? <Badge color="red">Banned</Badge> : <Badge color="green">Active</Badge>}
+        {row.banned ? (
+          <Badge color="red">Banned</Badge>
+        ) : (
+          <Badge color="green">Active</Badge>
+        )}
       </Table.Td>
     </Table.Tr>
   ));
 
-
-  if (isLoading) return <div>Načítavam používateľov...</div>
-  if (error) return <div>Chyba pri načítaní dát</div>
+  if (isLoading) return <div>Načítavam používateľov...</div>;
+  if (error) return <div>Chyba pri načítaní dát</div>;
 
   return (
     <ScrollArea>
@@ -137,27 +145,32 @@ export function UserTable() {
         value={search}
         onChange={handleSearchChange}
       />
-      <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
+      <Table
+        horizontalSpacing="md"
+        verticalSpacing="xs"
+        miw={700}
+        layout="fixed"
+      >
         <Table.Tbody>
           <Table.Tr>
             <Th
-              sorted={sortBy === 'id'}
+              sorted={sortBy === "id"}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('id')}
+              onSort={() => setSorting("id")}
             >
               ID
             </Th>
             <Th
-              sorted={sortBy === 'name'}
+              sorted={sortBy === "name"}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('name')}
+              onSort={() => setSorting("name")}
             >
               Name
             </Th>
             <Th
-              sorted={sortBy === 'gender'}
+              sorted={sortBy === "gender"}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('gender')}
+              onSort={() => setSorting("gender")}
             >
               Gender
             </Th>
