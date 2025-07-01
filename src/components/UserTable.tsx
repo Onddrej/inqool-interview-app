@@ -15,13 +15,7 @@ import {
 import classes from './TableSort.module.css';
 import { useQuery } from '@tanstack/react-query'
 import { fetchUsers } from '../api/users';
-
-interface RowData {
-  id: string;
-  name: string;
-  gender: string;
-  banned: boolean;
-}
+import type { RowData } from '../api/users';
 
 interface ThProps {
   children: React.ReactNode;
