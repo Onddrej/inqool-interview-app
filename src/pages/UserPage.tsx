@@ -8,11 +8,11 @@ export default function Users() {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
   return (
-    <Container size="md" py="xl">
+    <Container size="100%" py="xl" style={{ maxWidth: '100vw' }}>
       <Button onClick={() => navigate('/')} mb="md" variant="light" leftSection={<IconArrowLeft size={18} />}>
         Back to main page
       </Button>
-      <Paper p="xl" radius="md" shadow="md" bg="white">
+      <Paper p="xl" radius="md" shadow="md" bg="white" style={{ width: '100%' }}>
         <Flex direction="column" gap="lg">
           <Flex align="center" gap="sm">
             <IconUser size={32} />

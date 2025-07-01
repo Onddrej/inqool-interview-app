@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IconChevronDown, IconChevronUp, IconSearch, IconSelector } from '@tabler/icons-react';
+import { IconChevronDown, IconChevronUp, IconSearch, IconSelector, IconEdit, IconBan } from '@tabler/icons-react';
 import {
   Center,
   Group,
@@ -15,8 +15,8 @@ import {
   Modal,
 } from '@mantine/core';
 import classes from './TableSort.module.css';
-import { useQuery } from '@tanstack/react-query'
-import { fetchUsers } from '../api/users';
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { fetchUsers, banUser } from '../api/users';
 import type { RowData } from '../api/users';
 import { UserForm } from './UserForm';
 
@@ -88,6 +88,9 @@ export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [addUserOpen, setAddUserOpen] = useState(false);
+  const [editUser, setEditUser] = useState<RowData | null>(null);
+  const [banLoadingId, setBanLoadingId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (data) {
@@ -108,6 +111,16 @@ export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
     setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
+  const handleBan = async (userId: string) => {
+    setBanLoadingId(userId);
+    try {
+      await banUser(userId);
+      await queryClient.invalidateQueries({ queryKey: ['users'] });
+    } finally {
+      setBanLoadingId(null);
+    }
+  };
+
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.id}>
       <Table.Td>{row.id}</Table.Td>
@@ -115,6 +128,16 @@ export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
       <Table.Td>{row.gender}</Table.Td>
       <Table.Td>
         {row.banned ? <Badge color="red">Banned</Badge> : <Badge color="green">Active</Badge>}
+      </Table.Td>
+      <Table.Td>
+        <Group gap="xs" justify="start">
+          <Button size="xs" variant="subtle" leftSection={<IconEdit size={16} />} onClick={() => setEditUser(row)}>
+            Edit
+          </Button>
+          <Button size="xs" variant="subtle" color="red" leftSection={<IconBan size={16} />} onClick={() => handleBan(row.id)} loading={banLoadingId === row.id} disabled={row.banned}>
+            Ban
+          </Button>
+        </Group>
       </Table.Td>
     </Table.Tr>
   ));
@@ -178,6 +201,14 @@ export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
           if (onUserAdded) onUserAdded();
         }} />
       </Modal>
+      <Modal opened={!!editUser} onClose={() => setEditUser(null)} title="Edit User" centered>
+        {editUser && (
+          <UserForm user={editUser} onCancel={() => setEditUser(null)} onSuccess={() => {
+            setEditUser(null);
+            if (onUserAdded) onUserAdded();
+          }} />
+        )}
+      </Modal>
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
         <Table.Tbody>
           <Table.Tr>
@@ -209,6 +240,7 @@ export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
             >
               Banned
             </Th>
+            <Table.Th>Actions</Table.Th>
           </Table.Tr>
         </Table.Tbody>
         <Table.Tbody>

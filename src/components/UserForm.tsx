@@ -3,7 +3,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createUser } from '../api/users';
+import type { RowData } from '../api/users';
+import { createUser, updateUser } from '../api/users';
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -13,8 +14,9 @@ const userSchema = z.object({
 
 type UserFormValues = z.infer<typeof userSchema>;
 
-export function UserForm({ onCancel, onSuccess }: { onCancel?: () => void; onSuccess?: (success?: boolean) => void }) {
+export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void; onSuccess?: (success?: boolean) => void; user?: RowData }) {
   const queryClient = useQueryClient();
+  const isEdit = !!user;
   const {
     register,
     handleSubmit,
@@ -23,11 +25,12 @@ export function UserForm({ onCancel, onSuccess }: { onCancel?: () => void; onSuc
     control,
   } = useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
-    defaultValues: { gender: 'male', banned: false },
+    defaultValues: user ? { name: user.name, gender: user.gender, banned: false } : { gender: 'male', banned: false },
   });
 
   const mutation = useMutation({
-    mutationFn: createUser,
+    mutationFn: (data: UserFormValues) =>
+      isEdit && user ? updateUser(user.id, { ...data, banned: user.banned }) : createUser({ ...data, banned: false }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       reset();
@@ -36,7 +39,7 @@ export function UserForm({ onCancel, onSuccess }: { onCancel?: () => void; onSuc
   });
 
   const onSubmit = (data: UserFormValues) => {
-    mutation.mutate({ ...data, banned: false });
+    mutation.mutate(data);
   };
 
   return (
