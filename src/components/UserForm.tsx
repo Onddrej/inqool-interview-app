@@ -1,10 +1,11 @@
-import { Card, TextInput, Button, Select, Group, Text } from '@mantine/core';
+import { Card, TextInput, Button, Select, Group, Text, Alert } from '@mantine/core';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createUser } from '../api/users';
 import { useState } from 'react';
+import { IconCheck } from '@tabler/icons-react';
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -75,7 +76,21 @@ export function UserForm() {
             Add User
           </Button>
         </Group>
-        {success && <Text c="green" mt="sm">User added!</Text>}
+        {success && (
+          <div style={{ position: 'fixed', right: 24, bottom: 24, zIndex: 9999, minWidth: 300 }}>
+            <Alert
+              variant="light"
+              color="green"
+              radius="lg"
+              title="User created"
+              icon={<IconCheck />}
+              withCloseButton
+              onClose={() => setSuccess(false)}
+            >
+              The user was successfully added.
+            </Alert>
+          </div>
+        )}
         {mutation.isError && <Text c="red" mt="sm">Error adding user</Text>}
       </form>
     </Card>
