@@ -17,10 +17,16 @@ export function sortData<T extends Record<string, any>>(
   }
   return filterData(
     [...data].sort((a, b) => {
-      if (payload.reversed) {
-        return b[sortBy]?.toString().localeCompare(a[sortBy]?.toString());
+      const aValue = a[sortBy];
+      const bValue = b[sortBy];
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return payload.reversed ? bValue - aValue : aValue - bValue;
       }
-      return a[sortBy]?.toString().localeCompare(b[sortBy]?.toString());
+      const aStr = aValue?.toString() ?? '';
+      const bStr = bValue?.toString() ?? '';
+      return payload.reversed
+        ? bStr.localeCompare(aStr)
+        : aStr.localeCompare(bStr);
     }),
     payload.search
   );
