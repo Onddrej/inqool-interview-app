@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Flex, Title } from "@mantine/core";
+import { Button, Flex, Title, useComputedColorScheme } from "@mantine/core";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import UsersPage from "./pages/UserPage";
 import AnimalsPage from "./pages/AnimalPage";
@@ -17,6 +17,7 @@ type RippleState = {
 function Home() {
   const navigate = useNavigate();
   const [ripple, setRipple] = useState<RippleState>(null);
+  const colorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
 
   const handleClick = (path: string, color: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -39,7 +40,7 @@ function Home() {
       style={{
         position: "relative",
         overflow: "hidden",
-        backgroundImage: 'url("/bg.jpg")',
+        backgroundImage: colorScheme === 'dark' ? 'url("/bg-dark.png")' : 'url("/bg.jpg")',
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
