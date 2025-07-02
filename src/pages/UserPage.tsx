@@ -1,10 +1,10 @@
 import { Container, Flex, Paper, Title, Button } from '@mantine/core'
 import { IconUser, IconArrowLeft } from '@tabler/icons-react'
-import { UserTable } from '../components/UserTable'
+import { UserTable } from '../components/users/UserTable'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { ActionToggle } from '../components/ActionToggle'
-import { ActionAlert, type AlertType } from '../components/ActionAlert'
+import { ActionToggle } from '../components/shared/ActionToggle'
+import { ActionAlert, type AlertType } from '../components/shared/ActionAlert'
 import { USER_COLOR } from '../style/colors'
 import { useComputedColorScheme } from '@mantine/core'
 

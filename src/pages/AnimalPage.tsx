@@ -1,10 +1,10 @@
 import { Container, Flex, Paper, Title, Button } from '@mantine/core';
 import { IconPaw, IconArrowLeft } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { AnimalTable } from '../components/AnimalTable';
-import { ActionToggle } from '../components/ActionToggle';
+import { AnimalTable } from '../components/animals/AnimalTable';
+import { ActionToggle } from '../components/shared/ActionToggle';
 import { useState } from 'react';
-import { ActionAlert, type AlertType } from '../components/ActionAlert';
+import { ActionAlert, type AlertType } from '../components/shared/ActionAlert';
 import { ANIMAL_COLOR } from '../style/colors';
 import { useComputedColorScheme } from '@mantine/core';
 

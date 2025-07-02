@@ -10,13 +10,13 @@ import {
   Modal,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { fetchAnimals } from '../api/animals';
-import type { RowData } from '../api/animals';
+import { fetchAnimals } from '../../api/animals';
+import type { RowData } from '../../api/animals';
 import { AnimalForm } from './AnimalForm';
-import { SortableTh } from './SortableTh';
-import { sortData } from './tableUtils';
-import { TableSkeleton } from './TableSkeleton';
-import { ANIMAL_COLOR } from '../style/colors';
+import { SortableTh } from '../shared/SortableTh';
+import { sortData } from '../shared/tableUtils';
+import { TableSkeleton } from '../shared/TableSkeleton';
+import { ANIMAL_COLOR } from '../../style/colors';
 
 export function AnimalTable({ onAnimalChanged }: { onAnimalChanged?: () => void }) {
   const { data, isLoading, error } = useQuery({

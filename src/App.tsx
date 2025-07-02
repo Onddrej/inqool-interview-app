@@ -5,7 +5,7 @@ import UsersPage from "./pages/UserPage";
 import AnimalsPage from "./pages/AnimalPage";
 import { IconUser, IconPaw } from "@tabler/icons-react";
 import { USER_COLOR, ANIMAL_COLOR } from "./style/colors";
-import { ActionToggle } from "./components/ActionToggle";
+import { ActionToggle } from "./components/shared/ActionToggle";
 
 type RippleState = {
   x: number;

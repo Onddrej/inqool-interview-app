@@ -10,14 +10,14 @@ import {
   Button,
   Modal,
 } from '@mantine/core';
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { fetchUsers, banUser, unbanUser } from '../api/users';
-import type { RowData } from '../api/users';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { fetchUsers, banUser, unbanUser } from '../../api/users';
+import type { RowData } from '../../api/users';
 import { UserForm } from './UserForm';
-import { SortableTh } from './SortableTh';
-import { sortData } from './tableUtils';
-import { TableSkeleton } from './TableSkeleton';
-import { USER_COLOR } from '../style/colors';
+import { SortableTh } from '../shared/SortableTh';
+import { sortData } from '../shared/tableUtils';
+import { TableSkeleton } from '../shared/TableSkeleton';
+import { USER_COLOR } from '../../style/colors';
 
 export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'edited' | 'banned' | 'deleted' | 'unbanned') => void }) {
     const { data, isLoading, error } = useQuery({

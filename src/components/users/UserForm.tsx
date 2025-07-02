@@ -3,9 +3,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { RowData } from '../api/users';
-import { createUser, updateUser, deleteUser } from '../api/users';
-import { USER_COLOR } from '../style/colors';
+import type { RowData } from '../../api/users';
+import { createUser, updateUser, deleteUser } from '../../api/users';
+import { USER_COLOR } from '../../style/colors';
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
