@@ -85,7 +85,7 @@ export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void;
             Cancel
           </Button>
           {isEdit && (
-            <Button color="red" variant="filled" onClick={() => deleteMutation.mutate()} loading={deleteMutation.isPending} disabled={deleteMutation.isPending} type="button">
+            <Button color="red" variant="filled" onClick={() => deleteMutation.mutate()} loading={deleteMutation.isPending} disabled={deleteMutation.isPending || isSubmitting} type="button">
               Delete
             </Button>
           )}
