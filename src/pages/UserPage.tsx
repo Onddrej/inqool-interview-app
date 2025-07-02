@@ -1,14 +1,15 @@
-import { Container, Flex, Paper, Title, Button, Alert } from '@mantine/core'
-import { IconUser, IconArrowLeft, IconCheck } from '@tabler/icons-react'
+import { Container, Flex, Paper, Title, Button } from '@mantine/core'
+import { IconUser, IconArrowLeft } from '@tabler/icons-react'
 import { UserTable } from '../components/UserTable'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { ActionToggle } from '../components/ActionToggle'
+import { ActionAlert, type AlertType } from '../components/ActionAlert'
 
 export default function Users() {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
-  const [alertType, setAlertType] = useState<'added' | 'edited' | 'banned' | 'deleted' | 'unbanned'>('added');
+  const [alertType, setAlertType] = useState<AlertType>('added');
   return (
     <Container size="100%" py="md" style={{ maxWidth: '100vw', minHeight: '100vh'  }}>
       <Flex justify="space-between" align="center" mb="md">
@@ -30,37 +31,7 @@ export default function Users() {
           }} />
         </Flex>
       </Paper>
-      {showSuccess && (
-        <div style={{ position: 'fixed', right: 24, bottom: 24, zIndex: 9999, minWidth: 300 }}>
-          <Alert
-            variant="filled"
-            color={alertType === 'banned' || alertType === 'deleted' ? 'red' : 'green'}
-            radius="lg"
-            title={
-              alertType === 'added'
-                ? 'User created'
-                : alertType === 'edited'
-                ? 'User edited'
-                : alertType === 'banned'
-                ? 'User banned'
-                : alertType === 'deleted'
-                ? 'User deleted'
-                : 'User unbanned'
-            }
-            icon={<IconCheck />}
-          >
-            {alertType === 'added'
-              ? 'The user was successfully added.'
-              : alertType === 'edited'
-              ? 'The user was successfully edited.'
-              : alertType === 'banned'
-              ? 'The user was banned.'
-              : alertType === 'deleted'
-              ? 'The user was deleted.'
-              : 'The user was unbanned.'}
-          </Alert>
-        </div>
-      )}
+      <ActionAlert type={alertType} show={showSuccess} entityName="User" />
     </Container>
   )
 }

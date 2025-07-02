@@ -3,9 +3,13 @@ import { IconPaw, IconArrowLeft } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { AnimalTable } from '../components/AnimalTable';
 import { ActionToggle } from '../components/ActionToggle';
+import { useState } from 'react';
+import { ActionAlert, type AlertType } from '../components/ActionAlert';
 
 export default function AnimalsPage() {
   const navigate = useNavigate();
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [alertType, setAlertType] = useState<AlertType>('added');
   return (
     <Container size="100%" py="md" style={{ maxWidth: '100vw', minHeight: '100vh' }}>
       <Flex justify="space-between" align="center" mb="md">
@@ -20,9 +24,14 @@ export default function AnimalsPage() {
             <IconPaw size={32} />
             <Title order={1}>Animals</Title>
           </Flex>
-          <AnimalTable />
+          <AnimalTable onAnimalChanged={(type: AlertType = 'added') => {
+            setAlertType(type);
+            setShowSuccess(true);
+            setTimeout(() => setShowSuccess(false), 4000);
+          }} />
         </Flex>
       </Paper>
+      <ActionAlert type={alertType} show={showSuccess} entityName="Animal" />
     </Container>
   );
 }
