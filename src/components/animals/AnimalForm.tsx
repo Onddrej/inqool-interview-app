@@ -36,7 +36,7 @@ export function AnimalForm({ onCancel, onSuccess, animal }: { onCancel?: () => v
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['animals'] });
       reset();
-      if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess(true, isEdit ? 'edited' : 'added');
     },
   });
 

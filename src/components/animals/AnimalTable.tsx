@@ -18,7 +18,7 @@ import { sortData } from '../shared/tableUtils';
 import { TableSkeleton } from '../shared/TableSkeleton';
 import { ANIMAL_COLOR } from '../../style/colors';
 
-export function AnimalTable({ onAnimalChanged }: { onAnimalChanged?: () => void }) {
+export function AnimalTable({ onAnimalChanged }: { onAnimalChanged?: (type?: 'added' | 'edited' | 'deleted') => void }) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['animals'],
     queryFn: fetchAnimals,
@@ -97,16 +97,16 @@ export function AnimalTable({ onAnimalChanged }: { onAnimalChanged?: () => void 
         </Button>
       </Group>
       <Modal opened={addAnimalOpen} onClose={() => setAddAnimalOpen(false)} title="Add Animal" centered>
-        <AnimalForm onCancel={() => setAddAnimalOpen(false)} onSuccess={() => {
+        <AnimalForm onCancel={() => setAddAnimalOpen(false)} onSuccess={(_success, action) => {
           setAddAnimalOpen(false);
-          if (onAnimalChanged) onAnimalChanged();
+          if (onAnimalChanged) onAnimalChanged(action as 'added');
         }} />
       </Modal>
       <Modal opened={!!editAnimal} onClose={() => setEditAnimal(null)} title="Edit Animal" centered>
         {editAnimal && (
-          <AnimalForm animal={editAnimal} onCancel={() => setEditAnimal(null)} onSuccess={() => {
+          <AnimalForm animal={editAnimal} onCancel={() => setEditAnimal(null)} onSuccess={(_success, action) => {
             setEditAnimal(null);
-            if (onAnimalChanged) onAnimalChanged();
+            if (onAnimalChanged) onAnimalChanged(action as 'edited' | 'deleted');
           }} />
         )}
       </Modal>
