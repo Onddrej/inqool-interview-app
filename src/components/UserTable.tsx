@@ -75,7 +75,7 @@ function sortData(
 }
 
 
-export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'edited') => void }) {
+export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'edited' | 'banned') => void }) {
     const { data, isLoading, error } = useQuery({
         queryKey: ['users'],
         queryFn: fetchUsers,
@@ -118,6 +118,7 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
         await unbanUser(userId);
       } else {
         await banUser(userId);
+        if (onUserAdded) onUserAdded('banned');
       }
       await queryClient.invalidateQueries({ queryKey: ['users'] });
       await queryClient.refetchQueries({ queryKey: ['users'] });
