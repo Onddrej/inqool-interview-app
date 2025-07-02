@@ -89,7 +89,7 @@ export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void;
               Delete
             </Button>
           )}
-          <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
+          <Button type="submit" loading={mutation.isPending} disabled={mutation.isPending}>
             Save
           </Button>
         </Flex>

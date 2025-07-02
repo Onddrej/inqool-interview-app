@@ -103,7 +103,7 @@ export function AnimalForm({ onCancel, onSuccess, animal }: { onCancel?: () => v
               Delete
             </Button>
           )}
-          <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
+          <Button type="submit" loading={mutation.isPending} disabled={mutation.isPending}>
             Save
           </Button>
         </Flex>
