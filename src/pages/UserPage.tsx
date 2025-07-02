@@ -8,6 +8,7 @@ import { ActionToggle } from '../components/ActionToggle'
 export default function Users() {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [alertType, setAlertType] = useState<'added' | 'edited'>('added');
   return (
     <Container size="100%" py="md" style={{ maxWidth: '100vw', minHeight: '100vh'  }}>
       <Flex justify="space-between" align="center" mb="md">
@@ -22,9 +23,10 @@ export default function Users() {
             <IconUser size={32} />
             <Title order={1}>Users</Title>
           </Flex>
-          <UserTable onUserAdded={() => {
+          <UserTable onUserAdded={(type = 'added') => {
+            setAlertType(type);
             setShowSuccess(true);
-            setTimeout(() => setShowSuccess(false), 2000);
+            setTimeout(() => setShowSuccess(false), 4000);
           }} />
         </Flex>
       </Paper>
@@ -34,10 +36,10 @@ export default function Users() {
             variant="filled"
             color="green"
             radius="lg"
-            title="User created"
+            title={alertType === 'added' ? 'User created' : 'User edited'}
             icon={<IconCheck />}
           >
-            The user was successfully added.
+            {alertType === 'added' ? 'The user was successfully added.' : 'The user was successfully edited.'}
           </Alert>
         </div>
       )}

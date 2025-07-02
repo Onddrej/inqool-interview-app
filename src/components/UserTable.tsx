@@ -75,7 +75,7 @@ function sortData(
 }
 
 
-export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
+export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'edited') => void }) {
     const { data, isLoading, error } = useQuery({
         queryKey: ['users'],
         queryFn: fetchUsers,
@@ -210,14 +210,14 @@ export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
       <Modal opened={addUserOpen} onClose={() => setAddUserOpen(false)} title="Add User" centered>
         <UserForm onCancel={() => setAddUserOpen(false)} onSuccess={() => {
           setAddUserOpen(false);
-          if (onUserAdded) onUserAdded();
+          if (onUserAdded) onUserAdded('added');
         }} />
       </Modal>
       <Modal opened={!!editUser} onClose={() => setEditUser(null)} title="Edit User" centered>
         {editUser && (
           <UserForm user={editUser} onCancel={() => setEditUser(null)} onSuccess={() => {
             setEditUser(null);
-            if (onUserAdded) onUserAdded();
+            if (onUserAdded) onUserAdded('edited');
           }} />
         )}
       </Modal>
