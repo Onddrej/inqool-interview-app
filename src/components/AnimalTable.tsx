@@ -1,0 +1,235 @@
+import { useState, useEffect } from 'react';
+import { IconChevronDown, IconChevronUp, IconSearch, IconSelector, IconEdit } from '@tabler/icons-react';
+import {
+  Center,
+  Group,
+  keys,
+  ScrollArea,
+  Table,
+  Text,
+  TextInput,
+  UnstyledButton,
+  Button,
+  Skeleton,
+  Modal,
+} from '@mantine/core';
+import classes from './TableSort.module.css';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { fetchAnimals } from '../api/animals';
+import type { RowData } from '../api/animals';
+import { AnimalForm } from './AnimalForm';
+
+interface ThProps {
+  children: React.ReactNode;
+  reversed: boolean;
+  sorted: boolean;
+  onSort: () => void;
+}
+
+function Th({ children, reversed, sorted, onSort }: ThProps) {
+  const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+  return (
+    <Table.Th className={classes.th}>
+      <UnstyledButton onClick={onSort} className={classes.control}>
+        <Group justify="space-between">
+          <Text fw={500} fz="sm">
+            {children}
+          </Text>
+          <Center className={classes.icon}>
+            <Icon size={16} stroke={1.5} />
+          </Center>
+        </Group>
+      </UnstyledButton>
+    </Table.Th>
+  );
+}
+
+function filterData(data: RowData[], search: string) {
+  const query = search.toLowerCase().trim();
+  return data.filter((item) =>
+    keys(data[0]).some((key) => item[key]?.toString().toLowerCase().includes(query))
+  );
+}
+
+function sortData(
+  data: RowData[],
+  payload: { sortBy: keyof RowData | null; reversed: boolean; search: string }
+) {
+  const { sortBy } = payload;
+
+  if (!sortBy) {
+    return filterData(data, payload.search);
+  }
+
+  return filterData(
+    [...data].sort((a, b) => {
+      if (payload.reversed) {
+        return b[sortBy]?.toString().localeCompare(a[sortBy]?.toString());
+      }
+      return a[sortBy]?.toString().localeCompare(b[sortBy]?.toString());
+    }),
+    payload.search
+  );
+}
+
+export function AnimalTable({ onAnimalChanged }: { onAnimalChanged?: () => void }) {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['animals'],
+    queryFn: fetchAnimals,
+  });
+
+  const [search, setSearch] = useState('');
+  const [sortedData, setSortedData] = useState<RowData[]>([]);
+  const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
+  const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const [addAnimalOpen, setAddAnimalOpen] = useState(false);
+  const [editAnimal, setEditAnimal] = useState<RowData | null>(null);
+
+  useEffect(() => {
+    if (data) {
+      setSortedData(data);
+    }
+  }, [data]);
+
+  const setSorting = (field: keyof RowData) => {
+    const reversed = field === sortBy ? !reverseSortDirection : false;
+    setReverseSortDirection(reversed);
+    setSortBy(field);
+    setSortedData(sortData(data, { sortBy: field, reversed, search }));
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    setSearch(value);
+    setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
+  };
+
+  const rows = sortedData.map((row) => (
+    <Table.Tr key={row.id}>
+      <Table.Td>{row.id}</Table.Td>
+      <Table.Td>{row.name}</Table.Td>
+      <Table.Td>{row.type}</Table.Td>
+      <Table.Td>{row.age}</Table.Td>
+      <Table.Td>
+        <Button size="xs" variant="subtle" leftSection={<IconEdit size={16} />} onClick={() => setEditAnimal(row)}>
+          Edit
+        </Button>
+      </Table.Td>
+    </Table.Tr>
+  ));
+
+  if (isLoading) return (
+    <ScrollArea>
+      <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
+        <Table.Tbody>
+          <Table.Tr>
+            <Table.Th>ID</Table.Th>
+            <Table.Th>Name</Table.Th>
+            <Table.Th>Type</Table.Th>
+            <Table.Th>Age</Table.Th>
+          </Table.Tr>
+        </Table.Tbody>
+        <Table.Tbody>
+          {[...Array(5)].map((_, i) => (
+            <Table.Tr key={i}>
+              <Table.Td><Skeleton height={16} width={30} radius="xl" /></Table.Td>
+              <Table.Td><Skeleton height={16} width="80%" radius="xl" /></Table.Td>
+              <Table.Td><Skeleton height={16} width={60} radius="xl" /></Table.Td>
+              <Table.Td><Skeleton height={16} width={40} radius="xl" /></Table.Td>
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </Table>
+    </ScrollArea>
+  );
+  if (error) return <div>Chyba pri načítaní dát</div>;
+
+  return (
+    <ScrollArea>
+      <Group mb="md">
+        <TextInput
+          placeholder="Search by any field"
+          leftSection={<IconSearch size={16} stroke={1.5} />}
+          value={search}
+          onChange={handleSearchChange}
+        />
+        <Button
+          variant="outline"
+          onClick={() => {
+            setSearch('');
+            setSortBy(null);
+            setReverseSortDirection(false);
+            setSortedData(data ?? []);
+          }}
+        >
+          Clear all filters
+        </Button>
+        <Button onClick={() => setAddAnimalOpen(true)}>
+          Add animal
+        </Button>
+      </Group>
+      <Modal opened={addAnimalOpen} onClose={() => setAddAnimalOpen(false)} title="Add Animal" centered>
+        <AnimalForm onCancel={() => setAddAnimalOpen(false)} onSuccess={() => {
+          setAddAnimalOpen(false);
+          if (onAnimalChanged) onAnimalChanged();
+        }} />
+      </Modal>
+      <Modal opened={!!editAnimal} onClose={() => setEditAnimal(null)} title="Edit Animal" centered>
+        {editAnimal && (
+          <AnimalForm animal={editAnimal} onCancel={() => setEditAnimal(null)} onSuccess={() => {
+            setEditAnimal(null);
+            if (onAnimalChanged) onAnimalChanged();
+          }} />
+        )}
+      </Modal>
+      <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
+        <Table.Tbody>
+          <Table.Tr>
+            <Th
+              sorted={sortBy === 'id'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('id')}
+            >
+              ID
+            </Th>
+            <Th
+              sorted={sortBy === 'name'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('name')}
+            >
+              Name
+            </Th>
+            <Th
+              sorted={sortBy === 'type'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('type')}
+            >
+              Type
+            </Th>
+            <Th
+              sorted={sortBy === 'age'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('age')}
+            >
+              Age
+            </Th>
+            <Table.Th>Actions</Table.Th>
+          </Table.Tr>
+        </Table.Tbody>
+        <Table.Tbody>
+          {rows.length > 0 ? (
+            rows
+          ) : (
+            <Table.Tr>
+              <Table.Td colSpan={5}>
+                <Text fw={500} ta="center">
+                  Nothing found
+                </Text>
+              </Table.Td>
+            </Table.Tr>
+          )}
+        </Table.Tbody>
+      </Table>
+    </ScrollArea>
+  );
+} 

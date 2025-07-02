@@ -1,27 +1,28 @@
-import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
-
-const fetchAnimals = async () => {
-  const res = await axios.get('https://inqool-interview-api.vercel.app/api/animals')
-  return res.data
-}
+import { Container, Flex, Paper, Title, Button } from '@mantine/core';
+import { IconPaw, IconArrowLeft } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
+import { AnimalTable } from '../components/AnimalTable';
+import { ActionToggle } from '../components/ActionToggle';
 
 export default function AnimalsPage() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['animals'],
-    queryFn: fetchAnimals,
-  })
-
-  if (isLoading) return <div>Načítavam zvieratá...</div>
-  if (error) return <div>Chyba pri načítaní dát</div>
-
+  const navigate = useNavigate();
   return (
-    <ul>
-      {data.map((animal: any) => (
-        <li key={animal.id}>
-          🐾 {animal.name} ({animal.type}, {animal.age} rokov)
-        </li>
-      ))}
-    </ul>
-  )
+    <Container size="100%" py="md" style={{ maxWidth: '100vw', minHeight: '100vh' }}>
+      <Flex justify="space-between" align="center" mb="md">
+        <Button onClick={() => navigate('/')} radius="md" variant="light" leftSection={<IconArrowLeft size={18} />}>
+          Back to main page
+        </Button>
+        <ActionToggle />
+      </Flex>
+      <Paper p="md" radius="md" shadow="md" bg="white" style={{ width: '100%' }}>
+        <Flex direction="column" gap="md">
+          <Flex align="center" gap="sm">
+            <IconPaw size={32} />
+            <Title order={1}>Animals</Title>
+          </Flex>
+          <AnimalTable />
+        </Flex>
+      </Paper>
+    </Container>
+  );
 }
