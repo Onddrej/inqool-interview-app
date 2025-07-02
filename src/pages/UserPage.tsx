@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { ActionToggle } from '../components/ActionToggle'
 import { ActionAlert, type AlertType } from '../components/ActionAlert'
+import { USER_COLOR } from '../style/colors'
 
 export default function Users() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function Users() {
   return (
     <Container size="100%" py="md" style={{ maxWidth: '100vw', minHeight: '100vh'  }}>
       <Flex justify="space-between" align="center" mb="md">
-        <Button onClick={() => navigate('/')}  radius="md" variant="light" leftSection={<IconArrowLeft size={18} />}>
+        <Button onClick={() => navigate('/')} radius="md" variant="light" leftSection={<IconArrowLeft size={18} />} color={USER_COLOR}>
           Back to main page
         </Button>
         <ActionToggle />

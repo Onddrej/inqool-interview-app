@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { RowData } from '../api/users';
 import { createUser, updateUser, deleteUser } from '../api/users';
+import { USER_COLOR } from '../style/colors';
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -89,7 +90,7 @@ export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void;
               Delete
             </Button>
           )}
-          <Button type="submit" loading={mutation.isPending} disabled={mutation.isPending}>
+          <Button type="submit" loading={mutation.isPending} disabled={mutation.isPending} color={USER_COLOR}>
             Save
           </Button>
         </Flex>

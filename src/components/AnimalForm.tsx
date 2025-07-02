@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { RowData } from '../api/animals';
 import { createAnimal, updateAnimal, deleteAnimal } from '../api/animals';
+import { ANIMAL_COLOR } from '../style/colors';
 
 const animalSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -103,7 +104,7 @@ export function AnimalForm({ onCancel, onSuccess, animal }: { onCancel?: () => v
               Delete
             </Button>
           )}
-          <Button type="submit" loading={mutation.isPending} disabled={mutation.isPending}>
+          <Button type="submit" loading={mutation.isPending} disabled={mutation.isPending} color={ANIMAL_COLOR}>
             Save
           </Button>
         </Flex>

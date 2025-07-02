@@ -16,6 +16,7 @@ import { AnimalForm } from './AnimalForm';
 import { SortableTh } from './SortableTh';
 import { sortData } from './tableUtils';
 import { TableSkeleton } from './TableSkeleton';
+import { ANIMAL_COLOR } from '../style/colors';
 
 export function AnimalTable({ onAnimalChanged }: { onAnimalChanged?: () => void }) {
   const { data, isLoading, error } = useQuery({
@@ -56,7 +57,7 @@ export function AnimalTable({ onAnimalChanged }: { onAnimalChanged?: () => void 
       <Table.Td>{row.type}</Table.Td>
       <Table.Td>{row.age}</Table.Td>
       <Table.Td>
-        <Button size="xs" variant="subtle" leftSection={<IconEdit size={16} />} onClick={() => setEditAnimal(row)}>
+        <Button size="xs" variant="subtle" color={ANIMAL_COLOR} leftSection={<IconEdit size={16} />} onClick={() => setEditAnimal(row)}>
           Edit
         </Button>
       </Table.Td>
@@ -81,6 +82,7 @@ export function AnimalTable({ onAnimalChanged }: { onAnimalChanged?: () => void 
         />
         <Button
           variant="outline"
+          color={ANIMAL_COLOR}
           onClick={() => {
             setSearch('');
             setSortBy(null);
@@ -90,7 +92,7 @@ export function AnimalTable({ onAnimalChanged }: { onAnimalChanged?: () => void 
         >
           Clear all filters
         </Button>
-        <Button onClick={() => setAddAnimalOpen(true)}>
+        <Button onClick={() => setAddAnimalOpen(true)} color={ANIMAL_COLOR}>
           Add animal
         </Button>
       </Group>

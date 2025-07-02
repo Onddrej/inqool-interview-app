@@ -17,6 +17,7 @@ import { UserForm } from './UserForm';
 import { SortableTh } from './SortableTh';
 import { sortData } from './tableUtils';
 import { TableSkeleton } from './TableSkeleton';
+import { USER_COLOR } from '../style/colors';
 
 export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'edited' | 'banned' | 'deleted' | 'unbanned') => void }) {
     const { data, isLoading, error } = useQuery({
@@ -81,13 +82,13 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
       </Table.Td>
       <Table.Td>
         <Group gap="xs" justify="start">
-          <Button size="xs" variant="subtle" leftSection={<IconEdit size={16} />} onClick={() => setEditUser(row)}>
+          <Button size="xs" variant="subtle" color={USER_COLOR} leftSection={<IconEdit size={16} />} onClick={() => setEditUser(row)}>
             Edit
           </Button>
           <Button
             size="xs"
             variant="subtle"
-            color={row.banned ? 'green' : 'red'}
+            color={row.banned ? USER_COLOR : 'red'}
             leftSection={row.banned ? <IconCheck size={16} /> : <IconBan size={16} />}
             onClick={() => handleBanToggle(row.id, row.banned)}
             loading={banLoadingId === row.id}
@@ -118,6 +119,7 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
         />
         <Button
           variant="outline"
+          color={USER_COLOR}
           onClick={() => {
             setSearch('');
             setSortBy(null);
@@ -127,9 +129,7 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
         >
           Clear all filters
         </Button>
-        <Button
-          onClick={() => setAddUserOpen(true)}
-        >
+        <Button onClick={() => setAddUserOpen(true)} color={USER_COLOR}>
           Add user
         </Button>
       </Group>
