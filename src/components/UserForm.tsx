@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { RowData } from '../api/users';
-import { createUser, updateUser } from '../api/users';
+import { createUser, updateUser, deleteUser } from '../api/users';
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -34,6 +34,14 @@ export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void;
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       reset();
+      if (onSuccess) onSuccess(true);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => user ? deleteUser(user.id) : Promise.resolve(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
       if (onSuccess) onSuccess(true);
     },
   });
@@ -76,11 +84,17 @@ export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void;
           <Button variant="default" onClick={onCancel} type="button">
             Cancel
           </Button>
+          {isEdit && (
+            <Button color="red" variant="outline" onClick={() => deleteMutation.mutate()} loading={deleteMutation.isPending} disabled={deleteMutation.isPending} type="button">
+              Delete
+            </Button>
+          )}
           <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
             Save
           </Button>
         </Flex>
         {mutation.isError && <Text c="red" mt="sm">Error saving user</Text>}
+        {deleteMutation.isError && <Text c="red" mt="sm">Error deleting user</Text>}
       </form>
     </Card>
   );

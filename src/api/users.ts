@@ -32,3 +32,8 @@ export const unbanUser = async (id: string) => {
   const res = await axios.patch(`${API_BASE_URL}/users/${id}`, { banned: false });
   return res.data;
 }
+
+export const deleteUser = async (id: string) => {
+  const res = await axios.delete(`${API_BASE_URL}/users/${id}`);
+  return res.data;
+}
