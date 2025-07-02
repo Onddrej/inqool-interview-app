@@ -9,7 +9,7 @@ export default function Users() {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
   return (
-    <Container size="100%" py="md" style={{ maxWidth: '100vw' }}>
+    <Container size="100%" py="md" style={{ maxWidth: '100vw', minHeight: '100vh'  }}>
       <Flex justify="space-between" align="center" mb="md">
         <Button onClick={() => navigate('/')}  radius="md" variant="light" leftSection={<IconArrowLeft size={18} />}>
           Back to main page
