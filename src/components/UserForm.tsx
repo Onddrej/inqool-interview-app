@@ -14,7 +14,7 @@ const userSchema = z.object({
 
 type UserFormValues = z.infer<typeof userSchema>;
 
-export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void; onSuccess?: (success?: boolean) => void; user?: RowData }) {
+export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void; onSuccess?: (success?: boolean, action?: string) => void; user?: RowData }) {
   const queryClient = useQueryClient();
   const isEdit = !!user;
   const {
@@ -42,7 +42,7 @@ export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void;
     mutationFn: () => user ? deleteUser(user.id) : Promise.resolve(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      if (onSuccess) onSuccess(true);
+      if (onSuccess) onSuccess(true, 'deleted');
     },
   });
 
@@ -85,7 +85,7 @@ export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void;
             Cancel
           </Button>
           {isEdit && (
-            <Button color="red" variant="outline" onClick={() => deleteMutation.mutate()} loading={deleteMutation.isPending} disabled={deleteMutation.isPending} type="button">
+            <Button color="red" variant="filled" onClick={() => deleteMutation.mutate()} loading={deleteMutation.isPending} disabled={deleteMutation.isPending} type="button">
               Delete
             </Button>
           )}
