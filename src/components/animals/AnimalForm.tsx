@@ -1,3 +1,6 @@
+// AnimalForm.tsx
+// Form component for adding, editing, and deleting animals.
+
 import { Card, TextInput, Button, Select, NumberInput, Stack, Flex, Text } from '@mantine/core';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
@@ -16,6 +19,12 @@ const animalSchema = z.object({
 
 type AnimalFormValues = z.infer<typeof animalSchema>;
 
+/**
+ * Props for AnimalForm
+ * @param onCancel Callback to close the form/modal
+ * @param onSuccess Callback fired after successful add/edit/delete
+ * @param animal Animal data for editing (optional)
+ */
 export function AnimalForm({ onCancel, onSuccess, animal }: { onCancel?: () => void; onSuccess?: (success?: boolean, action?: string) => void; animal?: RowData }) {
   const queryClient = useQueryClient();
   const isEdit = !!animal;

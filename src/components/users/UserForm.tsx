@@ -1,3 +1,6 @@
+// UserForm.tsx
+// Form component for adding, editing, and deleting users.
+
 import { Card, TextInput, Button, Select, Text, Stack, Flex } from '@mantine/core';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
@@ -15,6 +18,12 @@ const userSchema = z.object({
 
 type UserFormValues = z.infer<typeof userSchema>;
 
+/**
+ * Props for UserForm
+ * @param onCancel Callback to close the form/modal
+ * @param onSuccess Callback fired after successful add/edit/delete
+ * @param user User data for editing (optional)
+ */
 export function UserForm({ onCancel, onSuccess, user }: { onCancel?: () => void; onSuccess?: (success?: boolean, action?: string) => void; user?: RowData }) {
   const queryClient = useQueryClient();
   const isEdit = !!user;

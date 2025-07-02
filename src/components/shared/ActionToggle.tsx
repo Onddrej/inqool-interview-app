@@ -1,5 +1,9 @@
+// ActionToggle.tsx
+// Component for toggling color scheme (light/dark mode)
+
 import { IconMoon, IconSun } from '@tabler/icons-react';
 import { ActionIcon, Group, useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
+
 
 export function ActionToggle() {
   const { setColorScheme } = useMantineColorScheme();

@@ -1,3 +1,6 @@
+// UserTable.tsx
+// Table component for displaying, filtering, sorting, editing, banning, and deleting users.
+
 import { useState, useEffect } from 'react';
 import { IconSearch, IconEdit, IconBan, IconCheck } from '@tabler/icons-react';
 import {
@@ -19,14 +22,18 @@ import { sortData } from '../shared/tableUtils';
 import { TableSkeleton } from '../shared/TableSkeleton';
 import { USER_COLOR } from '../../style/colors';
 
+/**
+ * Props for UserTable
+ * @param onUserAdded Callback fired when a user is added, edited, banned, unbanned, or deleted.
+ */
 export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'edited' | 'banned' | 'deleted' | 'unbanned') => void }) {
-    const { data, isLoading, error } = useQuery({
-        queryKey: ['users'],
-        queryFn: fetchUsers,
-      })
-    
-     
+  // Fetch users from API
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+  })
 
+  // State for search, sorting, and modals
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState<RowData[]>([]);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
@@ -36,12 +43,14 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
   const [banLoadingId, setBanLoadingId] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
+  // Update sorted data when API data changes
   useEffect(() => {
     if (data) {
       setSortedData(data);
     }
   }, [data]);
 
+  // Sorting logic
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
@@ -49,12 +58,14 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
     setSortedData(sortData(data, { sortBy: field, reversed, search }));
   };
 
+  // Search logic
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setSearch(value);
     setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
+  // Ban/unban logic
   const handleBanToggle = async (userId: string, banned: boolean) => {
     setBanLoadingId(userId);
     try {
@@ -72,6 +83,7 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
     }
   };
 
+  // Render table rows
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.id}>
       <Table.Td>{row.id}</Table.Td>
@@ -100,16 +112,18 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
     </Table.Tr>
   ));
 
-
+  // Loading and error states
   if (isLoading) return (
     <ScrollArea>
       <TableSkeleton columns={['ID', 'Name', 'Gender', 'Banned']} rows={5} />
     </ScrollArea>
   );
-  if (error) return <div>Chyba pri načítaní dát</div>
+  if (error) return <div>Error loading data</div>
 
+  // Main render
   return (
     <ScrollArea>
+      {/* Filter and action buttons */}
       <Group mb="md">
         <TextInput
           placeholder="Search by any field"
@@ -133,12 +147,14 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
           Add user
         </Button>
       </Group>
+      {/* Add user modal */}
       <Modal opened={addUserOpen} onClose={() => setAddUserOpen(false)} title="Add User" centered>
         <UserForm onCancel={() => setAddUserOpen(false)} onSuccess={() => {
           setAddUserOpen(false);
           if (onUserAdded) onUserAdded('added');
         }} />
       </Modal>
+      {/* Edit user modal */}
       <Modal opened={!!editUser} onClose={() => setEditUser(null)} title="Edit User" centered>
         {editUser && (
           <UserForm user={editUser} onCancel={() => setEditUser(null)} onSuccess={(_success, action) => {
@@ -147,6 +163,7 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
           }} />
         )}
       </Modal>
+      {/* Table with sortable headers */}
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
         <Table.Tbody>
           <Table.Tr>

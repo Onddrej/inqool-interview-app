@@ -1,10 +1,19 @@
+// TableSkeleton.tsx
+// Component for rendering a skeleton loading state for tables.
+
 import { Table, Skeleton } from '@mantine/core';
 import React from 'react';
 
+/**
+ * Props for TableSkeleton
+ * @param columns Array of column names
+ * @param rows Number of skeleton rows to render
+ */
 interface TableSkeletonProps {
   columns: (string | React.ReactNode)[];
   rows?: number;
 }
+
 
 export function TableSkeleton({ columns, rows = 5 }: TableSkeletonProps) {
   return (
