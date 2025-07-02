@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { RowData } from '../api/animals';
-import { createAnimal, updateAnimal } from '../api/animals';
+import { createAnimal, updateAnimal, deleteAnimal } from '../api/animals';
 
 const animalSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -14,7 +14,7 @@ const animalSchema = z.object({
 
 type AnimalFormValues = z.infer<typeof animalSchema>;
 
-export function AnimalForm({ onCancel, onSuccess, animal }: { onCancel?: () => void; onSuccess?: () => void; animal?: RowData }) {
+export function AnimalForm({ onCancel, onSuccess, animal }: { onCancel?: () => void; onSuccess?: (success?: boolean, action?: string) => void; animal?: RowData }) {
   const queryClient = useQueryClient();
   const isEdit = !!animal;
   const {
@@ -35,6 +35,14 @@ export function AnimalForm({ onCancel, onSuccess, animal }: { onCancel?: () => v
       queryClient.invalidateQueries({ queryKey: ['animals'] });
       reset();
       if (onSuccess) onSuccess();
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => animal ? deleteAnimal(animal.id) : Promise.resolve(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['animals'] });
+      if (onSuccess) onSuccess(true, 'deleted');
     },
   });
 
@@ -90,11 +98,17 @@ export function AnimalForm({ onCancel, onSuccess, animal }: { onCancel?: () => v
           <Button variant="default" onClick={onCancel} type="button">
             Cancel
           </Button>
+          {isEdit && (
+            <Button color="red" variant="filled" onClick={() => deleteMutation.mutate()} loading={deleteMutation.isPending} disabled={deleteMutation.isPending || isSubmitting} type="button">
+              Delete
+            </Button>
+          )}
           <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
             Save
           </Button>
         </Flex>
         {mutation.isError && <Text c="red" mt="sm">Error saving animal</Text>}
+        {deleteMutation.isError && <Text c="red" mt="sm">Error deleting animal</Text>}
       </form>
     </Card>
   );
