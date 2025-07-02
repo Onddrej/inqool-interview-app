@@ -1,26 +1,21 @@
 import { useState, useEffect } from 'react';
-import { IconChevronDown, IconChevronUp, IconSearch, IconSelector, IconEdit, IconBan, IconCheck } from '@tabler/icons-react';
+import { IconSearch, IconEdit, IconBan, IconCheck } from '@tabler/icons-react';
 import {
-  Center,
   Group,
-  keys,
   ScrollArea,
   Table,
   Text,
   TextInput,
-  UnstyledButton,
   Badge,
   Button,
-  Skeleton,
   Modal,
 } from '@mantine/core';
-import classes from './TableSort.module.css';
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchUsers, banUser, unbanUser } from '../api/users';
 import type { RowData } from '../api/users';
 import { UserForm } from './UserForm';
 import { SortableTh } from './SortableTh';
-import { filterData, sortData } from './tableUtils';
+import { sortData } from './tableUtils';
 import { TableSkeleton } from './TableSkeleton';
 
 export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'edited' | 'banned' | 'deleted' | 'unbanned') => void }) {

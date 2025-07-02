@@ -1,25 +1,20 @@
 import { useState, useEffect } from 'react';
-import { , IconEdit } from '@tabler/icons-react';
+import { IconSearch, IconEdit } from '@tabler/icons-react';
 import {
-  Center,
   Group,
-  keys,
   ScrollArea,
   Table,
   Text,
   TextInput,
-  UnstyledButton,
   Button,
-  Skeleton,
   Modal,
 } from '@mantine/core';
-import classes from './TableSort.module.css';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchAnimals } from '../api/animals';
 import type { RowData } from '../api/animals';
 import { AnimalForm } from './AnimalForm';
 import { SortableTh } from './SortableTh';
-import { filterData, sortData } from './tableUtils';
+import { sortData } from './tableUtils';
 import { TableSkeleton } from './TableSkeleton';
 
 export function AnimalTable({ onAnimalChanged }: { onAnimalChanged?: () => void }) {
