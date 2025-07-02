@@ -26,4 +26,4 @@ export const updateAnimal = async (id: string, animal: Partial<Omit<RowData, 'id
 export const deleteAnimal = async (id: string) => {
     const res = await axios.delete(`${API_BASE_URL}/animals/${id}`)
     return res.data
-}
+} 
