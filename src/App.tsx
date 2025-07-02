@@ -40,10 +40,11 @@ function Home() {
       style={{
         position: "relative",
         overflow: "hidden",
-        backgroundImage: colorScheme === 'dark' ? 'url("/bg-dark.png")' : 'url("/bg.jpg")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        backgroundImage: colorScheme === 'dark' ? 'none' : 'url("/bg.jpg")',
+        backgroundColor: colorScheme === 'dark' ? 'black' : undefined,
+        backgroundSize: colorScheme === 'dark' ? undefined : "cover",
+        backgroundPosition: colorScheme === 'dark' ? undefined : "center",
+        backgroundRepeat: colorScheme === 'dark' ? undefined : "no-repeat",
       }}
     >
       <div style={{ position: 'absolute', top: 16, right: 16, zIndex: 1000 }}>
