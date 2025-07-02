@@ -31,7 +31,7 @@ export default function Users() {
       {showSuccess && (
         <div style={{ position: 'fixed', right: 24, bottom: 24, zIndex: 9999, minWidth: 300 }}>
           <Alert
-            variant="light"
+            variant="filled"
             color="green"
             radius="lg"
             title="User created"
