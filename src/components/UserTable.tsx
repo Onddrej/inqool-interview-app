@@ -120,6 +120,7 @@ export function UserTable({ onUserAdded }: { onUserAdded?: () => void }) {
         await banUser(userId);
       }
       await queryClient.invalidateQueries({ queryKey: ['users'] });
+      await queryClient.refetchQueries({ queryKey: ['users'] });
     } finally {
       setBanLoadingId(null);
     }
