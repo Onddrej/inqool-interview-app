@@ -6,11 +6,13 @@ import { useState } from 'react'
 import { ActionToggle } from '../components/ActionToggle'
 import { ActionAlert, type AlertType } from '../components/ActionAlert'
 import { USER_COLOR } from '../style/colors'
+import { useComputedColorScheme } from '@mantine/core'
 
 export default function Users() {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
   const [alertType, setAlertType] = useState<AlertType>('added');
+  const colorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
   return (
     <Container size="100%" py="md" style={{ maxWidth: '100vw', minHeight: '100vh'  }}>
       <Flex justify="space-between" align="center" mb="md">
@@ -19,7 +21,12 @@ export default function Users() {
         </Button>
         <ActionToggle />
       </Flex>
-      <Paper p="md" radius="md" shadow="md" bg="white" style={{ width: '100%' }}>
+      <Paper
+        p="md"
+        radius="md"
+        shadow="md"
+        style={{ width: '100%', background: colorScheme === 'dark' ? '#23272e' : 'white' }}
+      >
         <Flex direction="column" gap="md">
           <Flex align="center" gap="sm">
             <IconUser size={32} />
