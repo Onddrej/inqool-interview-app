@@ -75,7 +75,7 @@ function sortData(
 }
 
 
-export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'edited' | 'banned' | 'deleted') => void }) {
+export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'edited' | 'banned' | 'deleted' | 'unbanned') => void }) {
     const { data, isLoading, error } = useQuery({
         queryKey: ['users'],
         queryFn: fetchUsers,
@@ -116,6 +116,7 @@ export function UserTable({ onUserAdded }: { onUserAdded?: (type?: 'added' | 'ed
     try {
       if (banned) {
         await unbanUser(userId);
+        if (onUserAdded) onUserAdded('unbanned');
       } else {
         await banUser(userId);
         if (onUserAdded) onUserAdded('banned');

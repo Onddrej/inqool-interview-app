@@ -8,7 +8,7 @@ import { ActionToggle } from '../components/ActionToggle'
 export default function Users() {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
-  const [alertType, setAlertType] = useState<'added' | 'edited' | 'banned' | 'deleted'>('added');
+  const [alertType, setAlertType] = useState<'added' | 'edited' | 'banned' | 'deleted' | 'unbanned'>('added');
   return (
     <Container size="100%" py="md" style={{ maxWidth: '100vw', minHeight: '100vh'  }}>
       <Flex justify="space-between" align="center" mb="md">
@@ -43,7 +43,9 @@ export default function Users() {
                 ? 'User edited'
                 : alertType === 'banned'
                 ? 'User banned'
-                : 'User deleted'
+                : alertType === 'deleted'
+                ? 'User deleted'
+                : 'User unbanned'
             }
             icon={<IconCheck />}
           >
@@ -53,7 +55,9 @@ export default function Users() {
               ? 'The user was successfully edited.'
               : alertType === 'banned'
               ? 'The user was banned.'
-              : 'The user was deleted.'}
+              : alertType === 'deleted'
+              ? 'The user was deleted.'
+              : 'The user was unbanned.'}
           </Alert>
         </div>
       )}
